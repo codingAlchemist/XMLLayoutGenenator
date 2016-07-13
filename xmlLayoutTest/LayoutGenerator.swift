@@ -16,10 +16,11 @@ class LayoutGenerator: NSObject, NSXMLParserDelegate {
     
     var elements = [Element]()
     
-    var parent = UIView()
+    var containerParent = UIView()
     
     override init(){
         super.init()
+        
     }
     
     func openFile(xmlFileToOpen:String, complete:(xmlData:NSData, open:Bool)->Void, failure:(NSError)->Void) -> Void {
@@ -32,14 +33,28 @@ class LayoutGenerator: NSObject, NSXMLParserDelegate {
         }
     }
     
-    func generateUIElements() -> Void {
-        print("Elements number:\(elements.count)")
-        for element in elements{
-            print("element type \(element.type!)")
-            if element.type! == .Label {
-                
+    func generateUIElements(parent: UIView,layout:String) -> Void {
+        self.containerParent = parent
+        openFile(layout, complete: { (xmlData, open) in
+            if open{
+                self.parser = NSXMLParser(data: xmlData)
+                self.parser.delegate = self
+                let success:Bool = self.parser.parse()
+                if success {
+                    print("Success")
+                    print("Elements number:\(self.elements.count)")
+                    for element in self.elements{
+                        self.containerParent.addSubview(element.getElement())
+                        
+                    }
+                }else{
+                    print("failure")
+                }
             }
+        }) { (error) in
+            print("Error:\(error)")
         }
+        
     }
 
     func parser(parser: NSXMLParser, foundComment comment: String) {
@@ -52,7 +67,7 @@ class LayoutGenerator: NSObject, NSXMLParserDelegate {
     }
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-        let elementTest = Element(typeIn: elementName, attributesIn: attributeDict, parent: self.view)
+        let elementTest = Element(typeIn: elementName, attributesIn: attributeDict, parent: self.containerParent)
         elements.append(elementTest)
     }
     

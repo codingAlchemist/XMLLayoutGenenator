@@ -12,7 +12,10 @@ public class Element: NSObject {
     
     public var widthAttr = Float()
     public var heightAttr = Float()
+    public var textAttr = String()
+    public var elementView = UIView()
     let numberFormatter = NSNumberFormatter()
+    
     public enum Types : String{
         case View  = "View"
         case Label = "Label"
@@ -35,22 +38,40 @@ public class Element: NSObject {
             let height = numberFormatter.numberFromString(attributesIn["height"]!)
             heightAttr = (height?.floatValue)!
         }
-        switch type! {
-        case .Label:
-            let label = UILabel()
-            if attributesIn["text"] != nil {
-                label.text = attributesIn["text"]
-            }
-            label.frame = CGRectMake(0, 0, CGFloat(widthAttr), CGFloat(heightAttr))
-            parent.addSubview(label)
-            print("Displaying label w:\(widthAttr) h:\(heightAttr) text:\(label.text)")
-            break
-        case .View:
-            break
-        default:
-            break
+        
+        if attributesIn["text"] != nil {
+            textAttr = attributesIn["text"]!
         }
+
     }
     
     
+    public func getElement()->UIView{
+        switch type! {
+            case .Label:
+                let view = UILabel()
+                view.frame = CGRectMake(0, 0, CGFloat(widthAttr), CGFloat(heightAttr))
+                view.text = self.textAttr
+                return view
+                
+            case .View:
+                let view = UIView()
+                view.frame = CGRectMake(0, 0, CGFloat(widthAttr), CGFloat(heightAttr))
+                return view
+        }
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
