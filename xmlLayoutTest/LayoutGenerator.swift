@@ -17,6 +17,7 @@ class LayoutGenerator: NSObject, NSXMLParserDelegate {
     var elements = [Element]()
     
     var containerView = UIView()
+    var parent = UIView()
     
     override init(){
         super.init()
@@ -52,7 +53,7 @@ class LayoutGenerator: NSObject, NSXMLParserDelegate {
     }
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-        let elementTest = Element(typeIn: elementName, attributesIn: attributeDict, parent: self.view)
+        let elementTest = Element(typeIn: elementName, attributesIn: attributeDict, parent: self.parent)
         elements.append(elementTest)
     }
     
