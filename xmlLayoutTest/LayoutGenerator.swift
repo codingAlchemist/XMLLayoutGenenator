@@ -16,7 +16,9 @@ class LayoutGenerator: NSObject, NSXMLParserDelegate {
     
     var elements = [Element]()
     
-    override func init(){
+    var parent = UIView()
+    
+    override init(){
         super.init()
     }
     
